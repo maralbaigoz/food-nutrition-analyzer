@@ -69,8 +69,8 @@ food-nutrition-analyzer/
 ## 1. Installation
 
 ```bash
-git clone <repository-url>
-cd <repository-folder>
+git clone https://github.com/maralbaigoz/food-nutrition-analyzer.git
+cd food-nutrition-analyzer
 python -m venv .venv
 # Windows: .venv\Scripts\activate      macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
@@ -200,7 +200,7 @@ Interpretation of every figure: `docs/eda_findings.md`.
 
 ## Submission (GitHub)
 
-- Repository: `<repository-url>` (public, or access granted to the instructor)
+- Repository: `https://github.com/maralbaigoz/food-nutrition-analyzer.git` (public, or access granted to the instructor)
 - Committed: source code (`src/`, `main.py`), `README.md`, `requirements.txt`, `docker-compose.yml`,
   `.gitignore`, `docs/`, `figures/`, `reports/` and the generated `data/` files
 - Not committed: `.venv/`, `__pycache__/`, `.env` (see `.gitignore`)
