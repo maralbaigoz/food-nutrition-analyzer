@@ -1,0 +1,89 @@
+======================================================================
+FOOD NUTRITION ANALYZER - PIPELINE VERIFICATION
+======================================================================
+
+1. RECORD COUNTS PER STAGE
+  Collected from API (raw_products.json)           300
+  Published to Kafka (producer log)                n/a
+  Consumed from Kafka (consumed_products.json)     300
+  Valid after Pandera (valid_products.csv)         292
+  Invalid after Pandera (invalid_products.csv)     8
+  After cleaning (cleaned_products.csv)            272
+  Stored in SQLite3 (products table)               272
+
+2. EXPLANATION OF DIFFERENCES
+  [INFO] Kafka broker not reachable - published count taken from data/kafka_stats.json (producer delivery callbacks). Start Kafka to verify it against the topic offsets.
+  [PASS] Consumed messages == collected records - 300 vs 300
+  [PASS] Consumed messages contain the same products as the API data
+  [PASS] Consumed messages are identical to the API records (JSON round-trip)
+  [PASS] valid + invalid == consumed - 292 + 8 = 300
+  Invalid records (8) and the rules they broke:
+    6111032009665: missing product_name
+    7622210449283: missing product_name
+    7300400481588: missing product_name
+    3175680015228: energy 2680 kcal > 1000
+    3088543506255: sugars_100g 112.9 > 100, carbohydrates_100g 115.0 > 100
+    6111246953679: missing product_name
+    6111246651261: missing product_name
+    3760049791006: energy 1144 kcal > 1000
+
+  Cleaning stage: 292 -> 272 (20 removed)
+    energy value missing                     18
+    sugars greater than carbohydrates        2
+  [PASS] Every validated record is either cleaned or logged as removed - 272 + 20 = 292
+  [PASS] Records after cleaning == records in SQLite3 - 272 vs 272
+
+3. DATABASE VERIFICATION (SQL QUERIES)
+  Total rows                                    272
+      SQL: SELECT COUNT(*) FROM products
+  Distinct product codes                        272
+      SQL: SELECT COUNT(DISTINCT code) FROM products
+  Codes that appear more than once              0
+      SQL: SELECT COUNT(*) FROM (SELECT code FROM products GROUP BY code HAVING COUNT(*) > 1)
+  Rows with NULL product_name                   0
+      SQL: SELECT COUNT(*) FROM products WHERE product_name IS NULL
+  Rows with negative nutrient values            0
+      SQL: SELECT COUNT(*) FROM products WHERE energy_kcal_100g < 0 OR sugars_100g < 0 OR proteins_100g < 0 OR fat_100g < 0 OR carbohydrates_100g < 0 OR salt_100g < 0
+  Rows with sugars > carbohydrates (should be filtered) 0
+      SQL: SELECT COUNT(*) FROM products WHERE sugars_100g > carbohydrates_100g + 0.5
+  Barcodes with a leading zero (must be kept)   2
+      SQL: SELECT COUNT(*) FROM products WHERE code LIKE '0%'
+
+  Average nutrients per 100 g (SQL AVG):
+      kcal=291.1, sugar=11.8, protein=6.3, fat=17.4
+
+  Top 5 brands by product count (SQL GROUP BY):
+      Jaouda               16
+      Star                 9
+      Coca-Cola            8
+      Unknown              6
+      alpro                5
+
+  [PASS] Table has a PRIMARY KEY on code
+  [PASS] No duplicate product codes in the database
+  [PASS] No NULL product names
+  [PASS] No negative nutrient values
+  [PASS] No products with sugars > carbohydrates
+  [PASS] Database contains exactly the cleaned products
+  [PASS] Stored nutrient values equal the cleaned values
+  [PASS] Stored product names equal the cleaned names
+
+4. IDEMPOTENCY TEST (repeated loading)
+  Before repeated load: 272 rows, SHA-256 00a1ff99da9096b2...
+  Running database.load_data() again (run 1)...
+  Running database.load_data() again (run 2)...
+  After 2 repeated loads: 272 rows, SHA-256 00a1ff99da9096b2...
+  [PASS] Row count unchanged after repeated loading - 272 -> 272
+  [PASS] Stored data unchanged after repeated loading (same hash)
+
+5. DATA QUALITY
+  Stored products that had some missing nutrients (filled during cleaning): 12
+  [PASS] No product without a real energy value is stored - 0 found
+  [PASS] Barcodes with leading zeros are preserved - 06153153, 06175700
+  [PASS] Brand spellings normalized (no upper/lower-case duplicates) - 0 variants
+  [PASS] protein + fat + carbs <= 100 g for every product - 0 found
+  [INFO] Declared kcal differs from 4P+4C+9F by >25%: 17 products (source data errors in Open Food Facts, kept and reported in the EDA)
+
+======================================================================
+SUMMARY: 20 of 20 checks passed
+======================================================================

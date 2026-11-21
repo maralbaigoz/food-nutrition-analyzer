@@ -1,0 +1,156 @@
+======================================================================
+FOOD NUTRITION ANALYZER - EXPLORATORY DATA ANALYSIS
+======================================================================
+
+1. DATASET DIMENSIONS
+Rows in database: 272, columns: 17
+Rows with some nutrient values filled by the median during cleaning: 7
+Rows used for nutrient analysis (real reported values only): 265
+
+2. DATA TYPES
+  code                     str
+  product_name             str
+  brands                   str
+  categories               str
+  energy_kcal_100g         float64
+  sugars_100g              float64
+  proteins_100g            float64
+  fat_100g                 float64
+  carbohydrates_100g       float64
+  salt_100g                float64
+  last_modified_t          datetime64[us]
+  total_macros             float64
+  nutrients_imputed        bool
+  food_group               str
+  sugar_level              category
+  calculated_kcal          float64
+  protein_energy_share     float64
+  modified_month           str
+
+3. DESCRIPTIVE STATISTICS (per 100 g, real values only)
+                    count    mean     std  min    25%     50%     75%    max  median  skewness
+energy_kcal_100g    265.0  297.16  230.63  0.0  69.00  270.00  515.00  900.0  270.00      0.21
+sugars_100g         265.0   11.98   18.36  0.0   0.10    4.00   15.00  100.0    4.00      2.12
+proteins_100g       265.0    6.37    6.68  0.0   0.50    5.90    9.00   34.0    5.90      1.58
+fat_100g            265.0   17.70   22.44  0.0   0.50    7.00   30.90  100.0    7.00      1.41
+carbohydrates_100g  265.0   27.53   27.37  0.0   2.70   14.30   56.00  100.0   14.30      0.57
+salt_100g           265.0    1.18    6.83  0.0   0.01    0.12    0.81   99.0    0.12     12.26
+
+4. CATEGORICAL STATISTICS
+Unique brands: 166
+Unique brands after lower-casing: 166
+
+Top 10 brands by number of products:
+brands
+Jaouda       16
+Star          9
+Coca-Cola     8
+Unknown       6
+Lindt         5
+Danone        5
+alpro         5
+Bjorg         5
+Gerblé        4
+Alesto        4
+
+Products per food group:
+food_group
+Beverages                     51
+Dairy                         43
+Bread & cereals               39
+Sauces & condiments           30
+Chocolate & sweets            23
+Biscuits & cereal bars        22
+Sweet spreads & jams          20
+Nuts & nut butters            15
+Fats & oils                   14
+Savoury snacks                 7
+Fish, meat & protein foods     6
+Other                          2
+
+Sugar level (real values only):
+sugar_level
+Low (≤5 g)           153
+Medium (5–22.5 g)     60
+High (>22.5 g)        52
+
+5. DATE/TIME STATISTICS (last_modified_t)
+Earliest update: 2024-12-17 17:21:44
+Latest update:   2026-11-19 16:46:02
+Products by year of last update:
+last_modified_t
+2024      2
+2025     14
+2026    256
+
+6. GROUPED ANALYSIS BY FOOD GROUP (real values only)
+                            products  mean_kcal  median_kcal  mean_sugar  mean_protein  mean_fat  mean_salt
+food_group                                                                                                 
+Fats & oils                       14     625.71       635.00        0.24          0.33     72.36       0.41
+Nuts & nut butters                15     588.19       621.00        8.77         22.51     49.07       0.30
+Chocolate & sweets                23     528.39       566.00       30.72          8.56     34.30       0.12
+Sweet spreads & jams              20     460.48       538.50       55.94          4.43     22.36       0.16
+Savoury snacks                     7     503.95       503.33        9.46          6.53     27.79       1.21
+Biscuits & cereal bars            22     464.69       460.00       22.17          7.26     18.24       0.53
+Bread & cereals                   39     308.90       341.00        5.16          9.84      5.08       0.60
+Other                              2     203.62       203.62        0.08         10.06      2.38       0.83
+Fish, meat & protein foods         6     137.45       162.86        0.99         17.42      6.40       0.62
+Sauces & condiments               29     240.24       117.00        6.22          3.91     19.60       8.01
+Dairy                             38     129.85       114.00        4.70          5.67      7.60       0.36
+Beverages                         50      17.40         0.00        1.87          0.33      0.24       0.04
+
+7. PIVOT TABLE - number of products by food group and sugar level
+sugar_level                 Low (≤5 g)  Medium (5–22.5 g)  High (>22.5 g)
+food_group                                                               
+Beverages                           43                  7               0
+Biscuits & cereal bars               2                  8              12
+Bread & cereals                     27                 12               0
+Chocolate & sweets                   4                  5              14
+Dairy                               23                 15               0
+Fats & oils                         14                  0               0
+Fish, meat & protein foods           6                  0               0
+Nuts & nut butters                   6                  8               1
+Other                                2                  0               0
+Sauces & condiments                 21                  4               4
+Savoury snacks                       5                  1               1
+Sweet spreads & jams                 0                  0              20
+
+8. TOP 10 PRODUCTS
+
+Highest sugar:
+                            product_name      brands  energy_kcal_100g  sugars_100g  proteins_100g
+Cosumar Sucre En Lingot Pour Le Thé 1 kg     COSUMAR             400.0        100.0            0.0
+                           سكر الفانيلين       Idéal             392.0         89.4            0.0
+                                   honey       Rowse             329.0         80.8            0.5
+                           Nesquik Cocoa      Nestlé             382.0         75.0            5.1
+                          Sirop d'érable   Maple Joe             268.0         66.0            0.0
+                     Confiture de Fraise   El Baraka             256.0         62.0            0.5
+                                 Poulain     Poulain             522.0         59.0            5.4
+                    Strawberry Extra Jam Bonne Maman             241.0         59.0            0.4
+                                 Nutella     Nutella             539.0         56.3            6.3
+                                 Nutella     Nutella             539.0         56.3            6.3
+
+Highest protein:
+                        product_name                brands  energy_kcal_100g  sugars_100g  proteins_100g
+               Marmite Yeast Extract               Marmite        262.500000         1.20           34.0
+                 Filets de maquereau                  joly        180.000000         0.60           30.1
+                     Unknown product                 Lukus        180.000000         0.16           30.1
+                Menguy's Peanut 100%              Menguy's        610.000000         6.20           28.0
+               Crunchy Peanut Butter           Whole earth        643.000000         3.80           27.7
+             Pur beurre de cacahuète       Jardin Bio étic        628.000000         5.10           27.0
+                Beurre bio cacahuète            Ethiquable        622.000000         5.80           26.0
+     Protein Cacahuetes🥜 & Chocolat🍫 Nature Valley Protein        194.789675        17.20           25.6
+Menguy's Beurre de cacahuètes creamy              Menguy's        629.000000         8.70           25.0
+                               Pipas           chipsy d'or        520.000000         1.65           24.6
+
+9. CORRELATION MATRIX (Pearson)
+                    energy_kcal_100g  sugars_100g  proteins_100g  fat_100g  carbohydrates_100g  salt_100g
+energy_kcal_100g                1.00         0.33           0.36      0.83                0.41      -0.08
+sugars_100g                     0.33         1.00          -0.03      0.05                0.60      -0.07
+proteins_100g                   0.36        -0.03           1.00      0.19                0.20       0.00
+fat_100g                        0.83         0.05           0.19      1.00               -0.10      -0.06
+carbohydrates_100g              0.41         0.60           0.20     -0.10                1.00      -0.07
+salt_100g                      -0.08        -0.07           0.00     -0.06               -0.07       1.00
+
+10. ENERGY CONSISTENCY CHECK
+Products whose declared kcal differs from 4P+4C+9F by more than 25% (and >30 kcal): 14 of 265

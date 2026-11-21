@@ -1,0 +1,6 @@
+requests>=2.31
+kafka-python>=2.0.2
+pandas>=2.1
+numpy>=1.26
+pandera>=0.24
+matplotlib>=3.8

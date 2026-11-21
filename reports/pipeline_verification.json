@@ -1,0 +1,137 @@
+{
+  "kafka": {
+    "error": "kafka-python is not installed"
+  },
+  "kafka_stats_file": {},
+  "counts": {
+    "collected_from_api": 300,
+    "published_to_kafka": null,
+    "consumed_from_kafka": 300,
+    "valid_records": 292,
+    "invalid_records": 8,
+    "records_after_cleaning": 272,
+    "records_in_sqlite": 272
+  },
+  "checks": [
+    {
+      "check": "Consumed messages == collected records",
+      "passed": true,
+      "details": "300 vs 300"
+    },
+    {
+      "check": "Consumed messages contain the same products as the API data",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "check": "Consumed messages are identical to the API records (JSON round-trip)",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "check": "valid + invalid == consumed",
+      "passed": true,
+      "details": "292 + 8 = 300"
+    },
+    {
+      "check": "Every validated record is either cleaned or logged as removed",
+      "passed": true,
+      "details": "272 + 20 = 292"
+    },
+    {
+      "check": "Records after cleaning == records in SQLite3",
+      "passed": true,
+      "details": "272 vs 272"
+    },
+    {
+      "check": "Table has a PRIMARY KEY on code",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "check": "No duplicate product codes in the database",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "check": "No NULL product names",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "check": "No negative nutrient values",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "check": "No products with sugars > carbohydrates",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "check": "Database contains exactly the cleaned products",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "check": "Stored nutrient values equal the cleaned values",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "check": "Stored product names equal the cleaned names",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "check": "Row count unchanged after repeated loading",
+      "passed": true,
+      "details": "272 -> 272"
+    },
+    {
+      "check": "Stored data unchanged after repeated loading (same hash)",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "check": "No product without a real energy value is stored",
+      "passed": true,
+      "details": "0 found"
+    },
+    {
+      "check": "Barcodes with leading zeros are preserved",
+      "passed": true,
+      "details": "06153153, 06175700"
+    },
+    {
+      "check": "Brand spellings normalized (no upper/lower-case duplicates)",
+      "passed": true,
+      "details": "0 variants"
+    },
+    {
+      "check": "protein + fat + carbs <= 100 g for every product",
+      "passed": true,
+      "details": "0 found"
+    }
+  ],
+  "sql_queries": {
+    "Total rows": 272,
+    "Distinct product codes": 272,
+    "Codes that appear more than once": 0,
+    "Rows with NULL product_name": 0,
+    "Rows with negative nutrient values": 0,
+    "Rows with sugars > carbohydrates (should be filtered)": 0,
+    "Barcodes with a leading zero (must be kept)": 2
+  },
+  "idempotency": {
+    "rows_before": 272,
+    "rows_after": 272,
+    "hash_before": "00a1ff99da9096b2488f7c10e1b8a15af4fc2004393ddfbb48fb8277b99b9214",
+    "hash_after": "00a1ff99da9096b2488f7c10e1b8a15af4fc2004393ddfbb48fb8277b99b9214"
+  },
+  "data_quality": {
+    "products_with_filled_nutrients": 12,
+    "energy_mismatch": 17,
+    "brand_case_variants": 0
+  }
+}
